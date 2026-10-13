@@ -370,6 +370,12 @@ impl BpeTrainer {
         self.train_counts(WordCountsView::from_map(word_counts))
     }
 
+    /// [`Self::do_train`] for unique `(word, count)` entries in any order, without building a map of them.
+    pub fn do_train_entries(&self, entries: Vec<(CompactString, u64)>) -> Result<(Vocab, Merges, Vec<AddedToken>)> {
+        let counts = WordCounts::from_entries(entries);
+        self.train_counts(counts.view())
+    }
+
     fn train_counts(
         &self,
         word_counts: WordCountsView<'_>,
