@@ -1,0 +1,31 @@
+[package]
+name = "toki"
+version = "0.1.0"
+edition = "2021"
+description = "Fast exact BPE: parallel word counting for PR #2501's trainer, and a streaming parallel encode driver"
+license = "Apache-2.0"
+
+[features]
+# hand-written SIMD in src/simd.rs (AVX2 on x86_64, NEON on aarch64)
+simd = []
+
+[lib]
+name = "toki"
+
+[dependencies]
+tk-train = { path = "../tk-train" }
+tk-encode = { path = "../tk-encode", features = ["parallelism"] }
+tk-serialize = { path = "../tk-serialize", features = ["normalizers", "unicode-scripts", "parallelism"] }
+tk-convert = { path = "../tk-convert" }
+bitcannon = { path = "../bitcannon" }
+compact_str = "0.9"
+libc = "0.2"
+mimalloc = { version = "0.1", default-features = false }
+libmimalloc-sys = { version = "0.1", features = ["extended"] }
+# Unicode tables, so every pre-tokenizer splits exactly like HF's:
+# regex-syntax gives the \w / \s / \p{..} classes of the regex crate HF's Whitespace uses;
+# unicode_categories is the crate HF uses for is_punctuation (Bert, Punctuation).
+regex-syntax = "0.8"
+unicode_categories = "0.1"
+# HF's normalization crate, so normalizers match HF exactly
+unicode-normalization-alignments = "0.1"
