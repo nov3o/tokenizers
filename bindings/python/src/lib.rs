@@ -6,6 +6,7 @@ mod error;
 mod options;
 mod repr;
 mod tokenizer;
+mod train;
 mod type_hints;
 
 #[pyo3::pymodule]
@@ -23,5 +24,6 @@ mod tokenizers {
     #[pymodule_export]
     use crate::tokenizer::Tokenizer;
 
-    // TODO: bind trainers
+    #[pymodule_export]
+    use crate::train::train_bpe;
 }

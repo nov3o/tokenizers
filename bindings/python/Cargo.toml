@@ -44,6 +44,8 @@ tk-serialize = { path = "../../tokenizers/tk-serialize", features = [
   "unicode-scripts",
 ] }
 tk-convert   = { path = "../../tokenizers/tk-convert", default-features = false }
+# BPE training: toki's word counting + PR #2501's trainer
+toki = { path = "../../tokenizers/toki" }
 
 [build-dependencies]
 pyo3-build-config = "=0.29"
