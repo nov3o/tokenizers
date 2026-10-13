@@ -563,6 +563,42 @@ impl PipelineTokenizer {
     ///
     /// This is for a writer, which needs the members themselves. A config `Sequence` was
     /// flattened on the way in, so what comes back is the concatenation, not the nesting.
+    /// Whether a long text can be cut before a `\n` that has an ASCII letter or digit on both sides, and the
+    /// parts encoded on their own, with the same ids: every normalizer works char by char and the
+    /// pre-tokenizer always ends a word there. Lets one long input use every thread.
+    pub(crate) fn can_split_text(&self) -> bool {
+        fn pretok(p: &PipelinePreTokenizer) -> bool {
+            match p {
+                PipelinePreTokenizer::Split(split) => split.is_gpt_regex(),
+                PipelinePreTokenizer::Sequence(seq) => seq.members().iter().all(pretok),
+                // these end a word at every whitespace; Punctuation, Digits and Delimiter alone do not
+                PipelinePreTokenizer::Bert(_)
+                | PipelinePreTokenizer::Whitespace(_)
+                | PipelinePreTokenizer::WhitespaceSplit(_) => true,
+                _ => false,
+            }
+        }
+        pretok(&self.inner.pre_tokenizer)
+            && self.inner.normalizers.iter().all(|n| {
+                !matches!(
+                    n,
+                    PipelineNormalizer::Metaspace(_)
+                        | PipelineNormalizer::Replace(_)
+                        | PipelineNormalizer::Prepend(_)
+                        | PipelineNormalizer::Strip(_)
+                ) && !Self::is_precompiled(n)
+            })
+    }
+
+    #[allow(unreachable_patterns)]
+    fn is_precompiled(n: &PipelineNormalizer) -> bool {
+        #[cfg(feature = "normalizers")]
+        if let PipelineNormalizer::Precompiled(_) = n {
+            return true;
+        }
+        false
+    }
+
     pub fn get_normalizers(&self) -> &[PipelineNormalizer] {
         &self.inner.normalizers
     }
