@@ -52,8 +52,10 @@ From Rust, the [`tokenizers/toki`](tokenizers/toki) crate has `toki::train::trai
 ## Results
 
 Default setting: 1 GB, 8 threads, GPT-2 byte-level, vocab 131 072, no normalizer, 2× AMD EPYC 7742, pinned cores.
-Each table swaps one axis; average of 4 datasets (english, multilingual, code, mix). Training vs PR #2501, encoding
-vs HF `main` (on a held-out half). Time = median of 2 runs, MEM = peak GB. Setup, data, per-dataset tables and the
+Each table swaps one axis; average of 4 datasets (english, multilingual, code, mix). Training vs PR #2501 at
+`e4f787dc`, encoding vs HF `main` at `ff8ae1ba` (on a held-out half); both baselines run from Rust, no Python, on
+the whole file. Time and memory are those of the whole process (loading, reading, writing included); merges and ids
+are checked equal on every run. Rust 1.99.0, no `target-cpu=native`. Time = median of 2 runs, MEM = peak GB. Setup, data, per-dataset tables and the
 scripts: [nov3o/toki](https://github.com/nov3o/toki).
 
 Equivalence: 214 training runs of ours, 214 with merges identical to PR #2501's; 212 encoding runs, 212 with ids identical to HF main's (token by token).
