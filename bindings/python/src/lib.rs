@@ -5,6 +5,7 @@ mod encoding;
 mod error;
 mod options;
 mod repr;
+mod stream;
 mod tokenizer;
 mod train;
 mod type_hints;
@@ -21,6 +22,8 @@ mod tokenizers {
     use crate::options::Padding;
     #[pymodule_export]
     use crate::options::Truncation;
+    #[pymodule_export]
+    use crate::stream::EncodeStream;
     #[pymodule_export]
     use crate::tokenizer::Tokenizer;
 
