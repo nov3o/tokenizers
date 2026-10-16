@@ -29,4 +29,6 @@ mod tokenizers {
 
     #[pymodule_export]
     use crate::train::train_bpe;
+    #[pymodule_export]
+    use crate::train::train_bpe_pr2501;
 }

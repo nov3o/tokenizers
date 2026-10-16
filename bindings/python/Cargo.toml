@@ -46,6 +46,9 @@ tk-serialize = { path = "../../tokenizers/tk-serialize", features = [
 tk-convert   = { path = "../../tokenizers/tk-convert", default-features = false }
 # BPE training: toki's word counting + PR #2501's trainer
 toki = { path = "../../tokenizers/toki" }
+# train_bpe_pr2501: PR #2501's own feed, the baseline
+tk-train = { path = "../../tokenizers/tk-train" }
+serde_json = "1"
 
 [build-dependencies]
 pyo3-build-config = "=0.29"
